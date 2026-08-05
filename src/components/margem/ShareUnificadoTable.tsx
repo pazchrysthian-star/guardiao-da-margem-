@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { computeShareUnificada, type Periodo, type Fonte } from "@/lib/mercado"
+import { computeShareUnificada, type Periodo, type Fonte, valorPeriodo } from "@/lib/mercado"
 import { pctS, R$ } from "@/lib/format"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowUpDown } from "lucide-react"
@@ -41,12 +41,15 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
 
   const nMeses = periodo === "MAT" ? 12 : periodo === "YTD" ? 6 : periodo === "T3M" ? 3 : 1
 
-  const totalVendaUni = sorted.reduce((s, d) => s + d.vendaUnipreco, 0)
-  const totalVendaMerc = sorted.reduce((s, d) => s + d.vendaMercado, 0)
-  const totalShare = totalVendaMerc > 0 ? totalVendaUni / totalVendaMerc : 0
+  const uniPeriodo = valorPeriodo("UNIPRECO", "TOTAL", periodo, fonte)
+  const mercPeriodo = valorPeriodo("BRICKS", "TOTAL", periodo, fonte)
 
-  const totalVendaUniAnt = sorted.reduce((s, d) => s + d.vendaUnipreco / (d.crescimentoUni > 0 ? 1 + d.crescimentoUni : 1), 0)
-  const totalVendaMercAnt = sorted.reduce((s, d) => s + d.vendaMercado / (d.crescimentoMercado > 0 ? 1 + d.crescimentoMercado : 1), 0)
+  const totalVendaUni = uniPeriodo.atual
+  const totalVendaUniAnt = uniPeriodo.anterior
+  const totalVendaMerc = mercPeriodo.atual
+  const totalVendaMercAnt = mercPeriodo.anterior
+
+  const totalShare = totalVendaMerc > 0 ? totalVendaUni / totalVendaMerc : 0
   const totalShareAnt = totalVendaMercAnt > 0 ? totalVendaUniAnt / totalVendaMercAnt : 0
 
   const totals = {
