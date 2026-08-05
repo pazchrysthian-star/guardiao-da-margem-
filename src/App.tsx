@@ -24,8 +24,6 @@ import { SimuladorDescontoCard } from "@/components/margem/SimuladorDescontoCard
 import { GapParticipacaoCard } from "@/components/margem/GapParticipacaoCard"
 import { GapDermocosmeticosSection } from "@/components/margem/GapDermocosmeticosSection"
 import { ShareUnificadoTable } from "@/components/margem/ShareUnificadoTable"
-import { EvolucaoAcumuladaSelector } from "@/components/margem/EvolucaoAcumuladaSelector"
-import { RegrasShareMercado } from "@/components/margem/RegrasShareMercado"
 import { EstoqueCard } from "@/components/margem/EstoqueCard"
 import { MesSelector, TendenciaCard } from "@/components/margem/TendenciaCard"
 import { HeatmapLinhaMesCard } from "@/components/margem/HeatmapLinhaMesCard"
@@ -255,7 +253,7 @@ export default function App() {
               </div>
               <section className="section-shell"><div className="section-heading"><div><span>01</span><h2>Composição e evolução do mercado</h2></div><p>Leitura rápida do mix da Unipreço comparado ao mercado e sua evolução nos últimos períodos.</p></div><MixVendasChart fonte={fonteMercado} /><EvolucaoComparativaChart fonte={fonteMercado} /></section>
               <section className="section-shell"><div className="section-heading"><div><span>02</span><h2>Detalhamento analítico</h2></div><p>Tabelas completas para conferência e aprofundamento por período.</p></div><CrescimentoTable fonte={fonteMercado} /><ShareMensalTable fonte={fonteMercado} /></section>
-              <section className="section-shell"><div className="section-heading"><div><span>03</span><h2>Share e evolução vs mercado</h2></div><p>Análise unificada: venda, participação, crescimento e ganho/perda mensal. Clique nos cabeçalhos para ordenar.</p></div><ShareUnificadoTable fonte={fonteMercado} /><EvolucaoAcumuladaSelector fonte={fonteMercado} /><RegrasShareMercado fonte={fonteMercado} /></section>
+              <section className="section-shell"><div className="section-heading"><div><span>03</span><h2>Share e evolução vs mercado</h2></div><p>Análise unificada: venda, participação, crescimento e ganho/perda mensal. Clique nos cabeçalhos para ordenar.</p></div><ShareUnificadoTable fonte={fonteMercado} /></section>
               <section className="section-shell"><div className="section-heading"><div><span>04</span><h2>Gap de participação por linha</h2></div><p>Quanto a rede deixa de faturar por ter participação diferente da observada no mercado, e da meta interna definida.</p></div><GapParticipacaoCard /></section>
               <section className="section-shell"><GapDermocosmeticosSection /></section>
             </>

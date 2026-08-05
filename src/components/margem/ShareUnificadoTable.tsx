@@ -41,19 +41,27 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
 
   const nMeses = periodo === "MAT" ? 12 : periodo === "YTD" ? 6 : 3
 
+  const totalVendaUni = sorted.reduce((s, d) => s + d.vendaUnipreco, 0)
+  const totalVendaMerc = sorted.reduce((s, d) => s + d.vendaMercado, 0)
+  const totalShare = totalVendaMerc > 0 ? totalVendaUni / totalVendaMerc : 0
+
+  const totalVendaUniAnt = sorted.reduce((s, d) => s + d.vendaUnipreco / (d.crescimentoUni > 0 ? 1 + d.crescimentoUni : 1), 0)
+  const totalVendaMercAnt = sorted.reduce((s, d) => s + d.vendaMercado / (d.crescimentoMercado > 0 ? 1 + d.crescimentoMercado : 1), 0)
+  const totalShareAnt = totalVendaMercAnt > 0 ? totalVendaUniAnt / totalVendaMercAnt : 0
+
   const totals = {
-    vendaUnipreco: sorted.reduce((s, d) => s + d.vendaUnipreco, 0),
-    vendaMercado: sorted.reduce((s, d) => s + d.vendaMercado, 0),
-    share: 0,
-    variacaoShare: 0,
-    crescimentoMercado: 0,
-    crescimentoUni: 0,
+    vendaUnipreco: totalVendaUni,
+    vendaMercado: totalVendaMerc,
+    share: totalShare,
+    variacaoShare: totalShare - totalShareAnt,
+    crescimentoMercado: totalVendaMercAnt > 0 ? totalVendaMerc / totalVendaMercAnt - 1 : 0,
+    crescimentoUni: totalVendaUniAnt > 0 ? totalVendaUni / totalVendaUniAnt - 1 : 0,
     gapCrescimento: 0,
     ganhoPerdaValor: sorted.reduce((s, d) => s + d.ganhoPerdaValor, 0),
     ganhoPerdaMensal: sorted.reduce((s, d) => s + d.ganhoPerdaMensal, 0),
   }
 
-  totals.share = totals.vendaMercado > 0 ? totals.vendaUnipreco / totals.vendaMercado : 0
+  totals.gapCrescimento = totals.crescimentoUni - totals.crescimentoMercado
 
   const SortIcon = ({ col }: { col: SortColumn }) => (
     <div className="inline-flex items-center gap-1">
@@ -197,10 +205,18 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
                 <td className="px-2 py-3 text-right text-text-main">{R$(totals.vendaUnipreco)}</td>
                 <td className="px-2 py-3 text-right text-text-main">{R$(totals.vendaMercado)}</td>
                 <td className="px-2 py-3 text-right text-brand">{pctS(totals.share)}</td>
-                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
-                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
-                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
-                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
+                <td className={`px-2 py-3 text-right ${totals.variacaoShare > 0 ? "text-brand" : totals.variacaoShare < 0 ? "text-danger-c" : "text-text-muted-c"}`}>
+                  {(totals.variacaoShare * 100).toFixed(2)}pp
+                </td>
+                <td className={`px-2 py-3 text-right ${totals.crescimentoMercado > 0 ? "text-text-main" : "text-text-muted-c"}`}>
+                  {pctS(totals.crescimentoMercado)}
+                </td>
+                <td className={`px-2 py-3 text-right font-semibold ${totals.crescimentoUni > 0 ? "text-brand" : "text-danger-c"}`}>
+                  {pctS(totals.crescimentoUni)}
+                </td>
+                <td className={`px-2 py-3 text-right font-semibold ${totals.gapCrescimento > 0 ? "text-brand" : "text-danger-c"}`}>
+                  {(totals.gapCrescimento * 100).toFixed(1)}pp
+                </td>
                 <td className={`px-2 py-3 text-right ${totals.ganhoPerdaValor > 0 ? "text-brand" : "text-danger-c"}`}>
                   {R$(totals.ganhoPerdaValor)}
                 </td>
