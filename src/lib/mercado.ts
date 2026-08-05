@@ -53,22 +53,29 @@ export function somaUltimosNMeses(escopo: Escopo, categoria: string, n: number, 
   return soma
 }
 
-export type Periodo = "MAT" | "YTD" | "T3M"
+export type Periodo = "MAT" | "YTD" | "T3M" | "YoY" | "MoM"
 
-// Resolve o valor "atual" e "do período anterior" pra um período (MAT, YTD ou trimestre móvel),
+// Resolve o valor "atual" e "do período anterior" pra um período (MAT, YTD, T3M, YoY, MoM),
 // pra qualquer escopo/categoria. T3M = soma dos últimos 3 meses vs os 3 meses anteriores a eles.
+// YoY = último mês vs mesmo mês ano anterior. MoM = último mês vs mês anterior.
 function valorPeriodo(escopo: Escopo, categoria: string, periodo: Periodo, fonte: Fonte): { atual: number; anterior: number } {
-  if (periodo === "MAT") return { atual: valorDe(escopo, categoria, "MAT26", fonte), anterior: valorDe(escopo, categoria, "MAT25", fonte) }
-  if (periodo === "YTD") return { atual: valorDe(escopo, categoria, "YDT26", fonte), anterior: valorDe(escopo, categoria, "YDT25", fonte) }
-  // T3M: últimos 3 meses vs os 3 meses imediatamente anteriores a eles
   const meses = mesesCalendario(fonte)
   const ultimo = meses[meses.length - 1]
+
+  if (periodo === "MAT") return { atual: valorDe(escopo, categoria, "MAT26", fonte), anterior: valorDe(escopo, categoria, "MAT25", fonte) }
+  if (periodo === "YTD") return { atual: valorDe(escopo, categoria, "YDT26", fonte), anterior: valorDe(escopo, categoria, "YDT25", fonte) }
+  if (periodo === "YoY") return { atual: valorDe(escopo, categoria, ultimo, fonte), anterior: valorDe(escopo, categoria, mesmoMesAnoAnterior(ultimo), fonte) }
+  if (periodo === "MoM") {
+    const mesAnt = mesAnterior(ultimo)
+    return { atual: valorDe(escopo, categoria, ultimo, fonte), anterior: valorDe(escopo, categoria, mesAnt, fonte) }
+  }
+
+  // T3M: últimos 3 meses vs os 3 meses imediatamente anteriores a eles
   const atual = somaUltimosNMeses(escopo, categoria, 3, fonte, ultimo)
-  // 3 meses anteriores: se último é índice N, o mês anterior é índice N-3 (pulando 3 meses para trás)
   const idxUltimo = meses.indexOf(ultimo)
   const idxAnterior = Math.max(0, idxUltimo - 3)
-  const mesAnterior = meses[idxAnterior]
-  const anterior = somaUltimosNMeses(escopo, categoria, 3, fonte, mesAnterior)
+  const mesAnt3 = meses[idxAnterior]
+  const anterior = somaUltimosNMeses(escopo, categoria, 3, fonte, mesAnt3)
   return { atual, anterior }
 }
 

@@ -39,7 +39,7 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
     }
   }
 
-  const nMeses = periodo === "MAT" ? 12 : periodo === "YTD" ? 6 : 3
+  const nMeses = periodo === "MAT" ? 12 : periodo === "YTD" ? 6 : periodo === "T3M" ? 3 : 1
 
   const totalVendaUni = sorted.reduce((s, d) => s + d.vendaUnipreco, 0)
   const totalVendaMerc = sorted.reduce((s, d) => s + d.vendaMercado, 0)
@@ -119,6 +119,26 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
               }`}
             >
               TRI
+            </button>
+            <button
+              onClick={() => setPeriodo("YoY")}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+                periodo === "YoY"
+                  ? "bg-brand text-white border-brand"
+                  : "border-border-soft text-text-muted-c hover:border-brand hover:text-brand"
+              }`}
+            >
+              YoY
+            </button>
+            <button
+              onClick={() => setPeriodo("MoM")}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+                periodo === "MoM"
+                  ? "bg-brand text-white border-brand"
+                  : "border-border-soft text-text-muted-c hover:border-brand hover:text-brand"
+              }`}
+            >
+              MoM
             </button>
           </div>
         </div>
