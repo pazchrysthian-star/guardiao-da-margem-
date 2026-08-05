@@ -1,0 +1,84 @@
+{
+  "metaVendaTotal": 40563167.62,
+  "metas": [
+    {
+      "linha": "MIP_GENÉRICO",
+      "metaParticipacao": 0.021,
+      "metaMB": 0.535,
+      "sellout": 1300
+    },
+    {
+      "linha": "MIP_MARCA",
+      "metaParticipacao": 0.075,
+      "metaMB": 0.27399999999999997,
+      "sellout": 32058.71
+    },
+    {
+      "linha": "MIP_TRADE",
+      "metaParticipacao": 0.023,
+      "metaMB": 0.514,
+      "sellout": 1452.97
+    },
+    {
+      "linha": "NÃO_MEDIC_BAZAR",
+      "metaParticipacao": 0.01,
+      "metaMB": 0.32,
+      "sellout": 0
+    },
+    {
+      "linha": "NÃO_MEDIC_MERC",
+      "metaParticipacao": 0.007,
+      "metaMB": 0.26,
+      "sellout": 0
+    },
+    {
+      "linha": "NÃO_MEDIC_NTR",
+      "metaParticipacao": 0.081,
+      "metaMB": 0.255,
+      "sellout": 8839.42
+    },
+    {
+      "linha": "NÃO_MEDIC_OTC",
+      "metaParticipacao": 0.062,
+      "metaMB": 0.355,
+      "sellout": 5248.16
+    },
+    {
+      "linha": "NÃO_MEDIC_PAC",
+      "metaParticipacao": 0.08,
+      "metaMB": 0.23,
+      "sellout": 121940.52
+    },
+    {
+      "linha": "NÃO_MEDIC_PEC",
+      "metaParticipacao": 0.25,
+      "metaMB": 0.32,
+      "sellout": 70872.79
+    },
+    {
+      "linha": "NÃO_MEDIC_SERVIÇO",
+      "metaParticipacao": 0.012,
+      "metaMB": 0.455,
+      "sellout": 0
+    },
+    {
+      "linha": "RX_GENÉRICO",
+      "metaParticipacao": 0.14,
+      "metaMB": 0.499,
+      "sellout": 20
+    },
+    {
+      "linha": "RX_PROMOVIDO",
+      "metaParticipacao": 0.213,
+      "metaMB": 0.15,
+      "sellout": 5818.98
+    },
+    {
+      "linha": "RX_TRADE",
+      "metaParticipacao": 0.021,
+      "metaMB": 0.525,
+      "sellout": 214
+    }
+  ],
+  "publicadoEm": "2026-07-23T17:21:45.034Z"
+}

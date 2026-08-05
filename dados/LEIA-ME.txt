@@ -1,0 +1,11 @@
+Coloque aqui:
+
+1. O .xlsx novo de venda/margem, antes de rodar 'npm run atualizar' (ou dar duplo-clique em atualizar.bat).
+
+2. (opcional) O arquivo "metas-para-publicar.json" — gerado pelo botão "Exportar para publicar"
+   dentro da tela de Metas por linha (aba Simulador de Meta, modo edição). Se esse arquivo
+   estiver aqui, as metas dele viram o novo padrão para qualquer computador que abrir o link.
+   Se não estiver, as metas publicadas anteriormente são mantidas.
+
+Depois de rodar a atualização, pode apagar os arquivos usados desta pasta (não são
+necessários para o funcionamento do site, só servem de entrada para o script).

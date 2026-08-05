@@ -1,0 +1,42 @@
+SE O WINDOWS BLOQUEAR O atualizar.bat
+=====================================
+
+Isso acontece porque a pasta veio de um .zip baixado da internet — o Windows
+marca os arquivos como "de origem externa" e o SmartScreen barra o .bat.
+
+OPCAO 1 (mais rapida) — desbloquear a pasta inteira de uma vez:
+
+  1. Clique com o botao direito nesta pasta (monitor-margem) segurando SHIFT
+     e escolha "Abrir janela do PowerShell aqui" (ou "Abrir no Terminal").
+  2. Cole o comando abaixo e de Enter:
+
+     Get-ChildItem -Recurse -File | Unblock-File
+
+  3. Feche o PowerShell. Agora o duplo-clique no atualizar.bat funciona.
+
+OPCAO 2 — desbloquear so o .bat:
+
+  Botao direito em atualizar.bat > Propriedades > marque "Desbloquear"
+  (canto inferior direito da aba Geral) > OK.
+
+OPCAO 3 — se o SmartScreen aparecer mesmo assim:
+
+  Na tela "O Windows protegeu o seu PC", clique em "Mais informacoes"
+  e depois em "Executar assim mesmo".
+
+OPCAO 4 — nao usar o .bat: abra o PowerShell nesta pasta e rode:
+
+     npm install
+     npm run atualizar
+
+
+PRIMEIRA VEZ NESTA PASTA
+========================
+
+Se voce substituiu a pasta antiga por esta, as dependencias (node_modules)
+nao vieram junto — sao centenas de MB e nao cabem no .zip. O atualizar.bat
+ja detecta isso e roda o "npm install" sozinho na primeira execucao.
+Basta ter paciencia: leva 1 a 2 minutos.
+
+A pasta .vercel (que liga o projeto ao link monitor-margem.vercel.app) esta
+incluida neste pacote, entao o deploy vai direto pro mesmo endereco de sempre.

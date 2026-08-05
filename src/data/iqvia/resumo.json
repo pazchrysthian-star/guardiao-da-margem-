@@ -1,0 +1,38 @@
+{
+  "gerado_em": "2026-07-26 23:44:10",
+  "valor_usado": "RS_PC (preço consumidor)",
+  "canais_exportados": [
+    "N/I",
+    "SI",
+    "SO",
+    "TOTAL (SI+SO somados)"
+  ],
+  "provedores_encontrados": [
+    "CONCORRENTES",
+    "FARMACIAS UNIPRECO"
+  ],
+  "flags_area_trabalhada": [
+    "AREA N TRAB",
+    "AREA TRAB"
+  ],
+  "criterio_bricks": "area trabalhada, excluindo os bricks sem operacao propria",
+  "bricks_excluidos_configurados": [
+    "I756",
+    "I766",
+    "I822",
+    "I771",
+    "I794"
+  ],
+  "bricks_excluidos_encontrados": [],
+  "bricks_nao_encontrados": [
+    "I756",
+    "I766",
+    "I822",
+    "I771",
+    "I794"
+  ],
+  "bricks_ambiguos": [],
+  "top_classes": 400,
+  "top_laboratorios": 300,
+  "top_produtos": 4000
+}

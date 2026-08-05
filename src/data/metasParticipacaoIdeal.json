@@ -1,0 +1,9 @@
+{
+  "_comentario": "Metas internas de participacao por cenario. Editavel sem tocar na logica. Valores em fracao (0.235 = 23,5%).",
+  "_tolerancia": 0.005,
+  "_baseGapFinanceiro": "IQVIA",
+  "_notaBaseGapFinanceiro": "IQVIA = usa a venda total rastreada pelo IQVIA como base do gap financeiro. A planilha da area usa a venda total real da rede (faturamento), que e maior, resultando em valores ~5% acima. Trocar para CMV quando a base de faturamento estiver disponivel nesta analise.",
+  "RX_PROMOVIDO_COM_GLP1": { "participacaoIdeal": 0.269 },
+  "RX_PROMOVIDO_SEM_GLP1": { "participacaoIdeal": 0.235 },
+  "RX_GENERICO": { "participacaoIdeal": 0.126 }
+}

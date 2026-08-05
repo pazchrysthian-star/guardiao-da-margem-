@@ -1,0 +1,85 @@
+MONITOR DE MARGEM V2.2 — VISÃO EXECUTIVA DO SIMULADOR
+
+Alterações realizadas exclusivamente na interface, preservando a lógica de negócio, fórmulas, leitura dos dados, hooks e estrutura do simulador.
+
+1. Cabeçalho do Simulador
+- Subtítulo atualizado para: “Acompanhamento da projeção de margem e impacto das metas da rede”.
+- Adicionado badge “Fechamento Validado”.
+- Mantidos atualização e botão de exportação.
+
+2. KPIs executivos
+- Quatro cards principais, com tamanhos e hierarquia padronizados:
+  • Venda Projetada
+  • MB Projetada
+  • Perda Financeira
+  • Recuperação Necessária por Dia
+- O antigo KPI “Gap de Peso” deixou de ocupar a linha principal.
+- Perda Financeira agora mostra a decomposição visual entre efeito margem e efeito mix.
+- Recuperação diária utiliza: impacto financeiro do gap ÷ dias restantes.
+- Quando não há dias restantes, o card exibe “Mês encerrado”.
+
+3. Decomposição do Gap
+- Nova seção Decomposição do Gap.
+- Fluxo visual: Meta → Margem Projetada → Gap Geral.
+- Barras horizontais para Impacto da Margem e Impacto do Mix.
+- Cada barra apresenta:
+  • valor em p.p.
+  • valor financeiro
+  • percentual de participação no gap
+  • explicação do efeito
+- Card de recuperação com:
+  • gap em p.p.
+  • equivalente financeiro
+  • valor necessário por dia
+  • dias restantes
+  • cenário de recuperação de 60%
+
+4. Cenário da Margem
+- Novo gráfico SVG puro, sem bibliotecas adicionais.
+- Apresenta:
+  • MB real bruta
+  • MB recomposta com sellout
+  • meta de margem
+- Não foram criados dados diários fictícios.
+- O gráfico destaca o efeito do sellout em pontos percentuais.
+
+5. Principais Impactos na Meta
+- Seção ampliada e priorizada visualmente.
+- Ranking dos cinco maiores ofensores.
+- Alternância instantânea entre visualização em p.p. e R$.
+- Barras horizontais proporcionais ao impacto.
+- Exibição complementar do valor na unidade não selecionada.
+- Destaque da maior contribuição positiva.
+
+6. Oportunidade Concentrada
+- Novo painel lateral com:
+  • quantidade de linhas abaixo da meta
+  • percentual da perda concentrado nas cinco principais
+  • quantidade de linhas para foco imediato
+  • potencial financeiro de recuperação
+- Callout verde com estimativa de recuperação das cinco maiores linhas.
+
+7. Tabela analítica
+- Mantida integralmente.
+- Preservados:
+  • ordenação por coluna
+  • mapa de calor
+  • total geral fixo
+  • impacto margem
+  • impacto mix
+  • impacto total
+  • responsabilidade
+  • status
+
+8. Arquivos principais alterados
+- src/App.tsx
+- src/index.css
+- src/components/margem/SimuladorKpisNovo.tsx
+- src/components/margem/ImpactoMetaPanel.tsx
+
+9. Arquivo criado
+- src/components/margem/DecomposicaoGapPanel.tsx
+
+10. Validação
+- npx tsc --noEmit -p tsconfig.app.json: concluído sem erros.
+- npm run build: bloqueado neste ambiente exclusivamente pela dependência nativa opcional do Rolldown (@rolldown/binding-linux-x64-gnu), não por erros TypeScript das alterações.
