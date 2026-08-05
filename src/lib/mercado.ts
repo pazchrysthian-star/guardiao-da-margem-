@@ -419,3 +419,52 @@ export function computeShareGainLossTable(periodo: Periodo = "MAT", fonte: Fonte
     }
   })
 }
+
+// ---------- Tabela Unificada: Share + Crescimento + Ganho/Perda Mensal ----------
+export type LinhaShareUnificada = {
+  categoriaIqvia: string
+  linha: string
+  vendaUnipreco: number
+  vendaMercado: number
+  share: number // %
+  variacaoShare: number // pp
+  crescimentoMercado: number // %
+  crescimentoUni: number // %
+  gapCrescimento: number // pp
+  ganhoPerdaValor: number // R$ total
+  ganhoPerdaMensal: number // R$ / mês
+}
+
+export function computeShareUnificada(periodo: Periodo = "MAT", fonte: Fonte = "COM_GLP1"): LinhaShareUnificada[] {
+  const nMeses = periodo === "MAT" ? 12 : periodo === "YTD" ? 6 : 3
+
+  return CATEGORIAS_IQVIA.map((cat) => {
+    const { atual: vendaUni, anterior: vendaUniAnt } = valorPeriodo("UNIPRECO", cat, periodo, fonte)
+    const { atual: vendaMerc, anterior: vendaMercAnt } = valorPeriodo("BRICKS", cat, periodo, fonte)
+
+    const share = vendaMerc > 0 ? vendaUni / vendaMerc : 0
+    const shareAnt = vendaMercAnt > 0 ? vendaUniAnt / vendaMercAnt : 0
+    const variacaoShare = share - shareAnt
+
+    const crescUni = vendaUniAnt > 0 ? vendaUni / vendaUniAnt - 1 : 0
+    const crescMerc = vendaMercAnt > 0 ? vendaMerc / vendaMercAnt - 1 : 0
+    const gapCrescimento = crescUni - crescMerc
+
+    const ganhoPerdaValor = variacaoShare * vendaMerc
+    const ganhoPerdaMensal = ganhoPerdaValor / nMeses
+
+    return {
+      categoriaIqvia: cat,
+      linha: MAPA_CATEGORIA_LINHA[cat],
+      vendaUnipreco: vendaUni,
+      vendaMercado: vendaMerc,
+      share,
+      variacaoShare,
+      crescimentoMercado: crescMerc,
+      crescimentoUni: crescUni,
+      gapCrescimento,
+      ganhoPerdaValor,
+      ganhoPerdaMensal,
+    }
+  })
+}
