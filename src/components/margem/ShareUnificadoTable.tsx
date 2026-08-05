@@ -2,13 +2,76 @@ import { useMemo, useState } from "react"
 import { computeShareUnificada, type Periodo, type Fonte } from "@/lib/mercado"
 import { pctS, R$ } from "@/lib/format"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowUpDown } from "lucide-react"
+
+type SortColumn = "linha" | "vendaUnipreco" | "vendaMercado" | "share" | "variacaoShare" | "crescimentoMercado" | "crescimentoUni" | "gapCrescimento" | "ganhoPerdaValor" | "ganhoPerdaMensal" | null
+type SortDirection = "asc" | "desc"
 
 export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
   const [periodo, setPeriodo] = useState<Periodo>("MAT")
+  const [sortColumn, setSortColumn] = useState<SortColumn>(null)
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc")
 
   const dados = useMemo(() => computeShareUnificada(periodo, fonte), [periodo, fonte])
 
+  const sorted = useMemo(() => {
+    if (!sortColumn) return dados
+
+    const copy = [...dados]
+    copy.sort((a, b) => {
+      let aVal = a[sortColumn as keyof typeof a]
+      let bVal = b[sortColumn as keyof typeof b]
+
+      if (typeof aVal === "string") aVal = aVal.localeCompare(String(bVal))
+      else aVal = (aVal as number) - (bVal as number)
+
+      return sortDirection === "asc" ? (aVal as number) : -(aVal as number)
+    })
+    return copy
+  }, [dados, sortColumn, sortDirection])
+
+  const handleSort = (col: SortColumn) => {
+    if (sortColumn === col) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+    } else {
+      setSortColumn(col)
+      setSortDirection("desc")
+    }
+  }
+
   const nMeses = periodo === "MAT" ? 12 : periodo === "YTD" ? 6 : 3
+
+  const totals = {
+    vendaUnipreco: sorted.reduce((s, d) => s + d.vendaUnipreco, 0),
+    vendaMercado: sorted.reduce((s, d) => s + d.vendaMercado, 0),
+    share: 0,
+    variacaoShare: 0,
+    crescimentoMercado: 0,
+    crescimentoUni: 0,
+    gapCrescimento: 0,
+    ganhoPerdaValor: sorted.reduce((s, d) => s + d.ganhoPerdaValor, 0),
+    ganhoPerdaMensal: sorted.reduce((s, d) => s + d.ganhoPerdaMensal, 0),
+  }
+
+  totals.share = totals.vendaMercado > 0 ? totals.vendaUnipreco / totals.vendaMercado : 0
+
+  const SortIcon = ({ col }: { col: SortColumn }) => (
+    <div className="inline-flex items-center gap-1">
+      <ArrowUpDown className={`size-3 ${sortColumn === col ? "text-brand" : "text-text-muted-c"}`} />
+    </div>
+  )
+
+  const HeaderCell = ({ col, children }: { col: SortColumn; children: React.ReactNode }) => (
+    <th
+      onClick={() => handleSort(col)}
+      className="px-2 py-2 text-right font-bold text-text-main cursor-pointer hover:bg-gray-100 transition-colors"
+    >
+      <div className="flex items-center justify-end gap-1">
+        {children}
+        <SortIcon col={col} />
+      </div>
+    </th>
+  )
 
   return (
     <Card>
@@ -16,7 +79,7 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Share Unipreço vs Mercado — Análise Completa</CardTitle>
-            <p className="mt-1 text-xs text-text-muted-c">Venda, participação, crescimento e ganho/perda de share em {nMeses} meses</p>
+            <p className="mt-1 text-xs text-text-muted-c">Venda, participação, crescimento e ganho/perda de share em {nMeses} meses — clique nos cabeçalhos para ordenar</p>
           </div>
           <div className="flex gap-2">
             <button
@@ -57,20 +120,33 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b-2 border-border-soft bg-gray-50">
-                <th className="px-2 py-2 text-left font-bold text-text-main">Linha</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Venda Uni</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Venda Merc</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Share %</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Δ Share pp</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Cresc. Merc %</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Cresc. Uni %</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Gap %</th>
-                <th className="px-2 py-2 text-right font-bold text-text-main">Ganho/Perda Total</th>
-                <th className="px-2 py-2 text-right font-bold text-brand">Ganho/Perda Mensal</th>
+                <th
+                  onClick={() => handleSort("linha")}
+                  className="px-2 py-2 text-left font-bold text-text-main cursor-pointer hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center gap-1">
+                    Linha
+                    <SortIcon col="linha" />
+                  </div>
+                </th>
+                <HeaderCell col="vendaUnipreco">Venda Uni</HeaderCell>
+                <HeaderCell col="vendaMercado">Venda Merc</HeaderCell>
+                <HeaderCell col="share">Share %</HeaderCell>
+                <HeaderCell col="variacaoShare">Δ Share pp</HeaderCell>
+                <HeaderCell col="crescimentoMercado">Cresc. Merc %</HeaderCell>
+                <HeaderCell col="crescimentoUni">Cresc. Uni %</HeaderCell>
+                <HeaderCell col="gapCrescimento">Gap %</HeaderCell>
+                <HeaderCell col="ganhoPerdaValor">Ganho/Perda Total</HeaderCell>
+                <th className="px-2 py-2 text-right font-bold text-brand cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort("ganhoPerdaMensal")}>
+                  <div className="flex items-center justify-end gap-1">
+                    Ganho/Perda Mensal
+                    <SortIcon col="ganhoPerdaMensal" />
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
-              {dados.map((linha) => (
+              {sorted.map((linha) => (
                 <tr key={linha.linha} className="border-b border-border-soft hover:bg-gray-50/50">
                   <td className="px-2 py-2 font-medium text-text-main">{linha.linha}</td>
                   <td className="px-2 py-2 text-right text-text-main">{R$(linha.vendaUnipreco)}</td>
@@ -116,6 +192,22 @@ export function ShareUnificadoTable({ fonte }: { fonte: Fonte }) {
                   </td>
                 </tr>
               ))}
+              <tr className="border-t-2 border-border-soft bg-brand-soft/30 font-bold">
+                <td className="px-2 py-3 text-text-main">TOTAL</td>
+                <td className="px-2 py-3 text-right text-text-main">{R$(totals.vendaUnipreco)}</td>
+                <td className="px-2 py-3 text-right text-text-main">{R$(totals.vendaMercado)}</td>
+                <td className="px-2 py-3 text-right text-brand">{pctS(totals.share)}</td>
+                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
+                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
+                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
+                <td className="px-2 py-3 text-right text-text-muted-c">—</td>
+                <td className={`px-2 py-3 text-right ${totals.ganhoPerdaValor > 0 ? "text-brand" : "text-danger-c"}`}>
+                  {R$(totals.ganhoPerdaValor)}
+                </td>
+                <td className={`px-2 py-3 text-right ${totals.ganhoPerdaMensal > 0 ? "text-brand" : "text-danger-c"}`}>
+                  {R$(totals.ganhoPerdaMensal)}
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
