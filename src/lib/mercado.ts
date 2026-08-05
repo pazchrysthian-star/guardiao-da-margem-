@@ -36,7 +36,7 @@ export function colunasMercado(fonte: Fonte = "COM_GLP1"): string[] {
 }
 export const COLUNAS_MERCADO: string[] = mercadoDataComGlp1.colunas as string[]
 
-function valorDe(escopo: Escopo, categoria: string, coluna: string, fonte: Fonte = "COM_GLP1"): number {
+export function valorDe(escopo: Escopo, categoria: string, coluna: string, fonte: Fonte = "COM_GLP1"): number {
   const bloco = (dadosDe(fonte).blocos as Record<string, Record<string, Record<string, number>>>)[escopo]
   return bloco?.[categoria]?.[coluna] ?? 0
 }
@@ -58,7 +58,7 @@ export type Periodo = "MAT" | "YTD" | "T3M" | "YoY" | "MoM"
 // Resolve o valor "atual" e "do período anterior" pra um período (MAT, YTD, T3M, YoY, MoM),
 // pra qualquer escopo/categoria. T3M = soma dos últimos 3 meses vs os 3 meses anteriores a eles.
 // YoY = último mês vs mesmo mês ano anterior. MoM = último mês vs mês anterior.
-function valorPeriodo(escopo: Escopo, categoria: string, periodo: Periodo, fonte: Fonte): { atual: number; anterior: number } {
+export function valorPeriodo(escopo: Escopo, categoria: string, periodo: Periodo, fonte: Fonte): { atual: number; anterior: number } {
   const meses = mesesCalendario(fonte)
   const ultimo = meses[meses.length - 1]
 
